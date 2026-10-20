@@ -1,72 +1,65 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxzkzysvdgjCtZtt1Bjrwf2uDwZR1cd-UzAcZ2X4DENFScE81fl_WJMk8zRgqhTaXyZzA/exec";
 
-async function loadTable() {
+// Evita che il contenuto del foglio venga interpretato come HTML
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function renderMeal(label, meal) {
+    const piatto = (meal.piatto || "").trim();
+    const note = (meal.note || "").trim();
+
+    return `
+          <div class="meal-box">
+            <h3>${label}</h3>
+            ${piatto
+            ? `<p class="meal-dish">${escapeHtml(piatto)}</p>`
+            : `<p class="meal-dish is-empty">--</p>`}
+            ${note ? `<p class="meal-note">${escapeHtml(note)}</p>` : ""}
+          </div>`;
+}
+
+async function loadMenu() {
+    const container = document.getElementById("weeklyMenu");
+
     try {
         const response = await fetch(API_URL);
         const data = await response.json();
 
-        const table = document.getElementById("daysTable");
+        container.innerHTML = "";
 
-        let tableContent = `
-    <thead>
-        <tr>
-            <th>Giorno</th>
-            <th>Tipo</th>
-            <th>Piatto</th>
-            <th>Note</th>
-            <th>Azione</th>
-        </tr>
-    </thead>
-    <tbody>
-        `;
+        // Ordine dei giorni della settimana
+        const giorni = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
-        data.forEach((row, index) => {
-            tableContent += `
-              <tr>
-                <td><strong>${row.giorno.toUpperCase()}</strong></td>
-                <td>${row.tipo}</td>
-                <td>
-                  <input type="text" id="piatto-${index}" value="${row.piatto}" placeholder="Inserisci piatto">
-                </td>
-                <td>
-                  <input type="text" id="note-${index}" value="${row.note}" placeholder="Note...">
-                </td>
-                <td>
-                  <button onclick="saveMeal('${row.giorno}', '${row.tipo}', ${index})">Salva</button>
-                </td>
-              </tr>
-            `;
+        giorni.forEach((giorno) => {
+            // Troviamo i pasti del giorno corrente
+            const pranzo = data.find(item => item.giorno === giorno && item.tipo === "pranzo") || {};
+            const cena = data.find(item => item.giorno === giorno && item.tipo === "cena") || {};
+
+            const dayCard = document.createElement("section");
+            dayCard.className = "day-card";
+
+            dayCard.innerHTML = `
+        <h2 class="day-title">${giorno.charAt(0).toUpperCase() + giorno.slice(1)}</h2>
+
+        <div class="meals-container">
+          ${renderMeal("Pranzo", pranzo)}
+          ${renderMeal("Cena", cena)}
+        </div>
+      `;
+
+            container.appendChild(dayCard);
         });
 
-        tableContent += `</tbody>`;
-        table.innerHTML = tableContent;
-
     } catch (error) {
-        console.error("Errore nel caricamento dei pasti:", error);
+        console.error("Errore nel caricamento del menu:", error);
+        container.innerHTML = `<p class="message">Non riesco a caricare i pasti. Controlla la connessione e ricarica la pagina.</p>`;
     }
 }
 
-// Invia le modifiche al Foglio Google
-async function saveMeal(giorno, tipo, index) {
-    const piattoInput = document.getElementById(`piatto-${index}`).value;
-    const noteInput = document.getElementById(`note-${index}`).value;
-
-    const payload = {
-        giorno: giorno,
-        tipo: tipo,
-        piatto: piattoInput,
-        note: noteInput
-    };
-
-    try {
-        await fetch(API_URL, {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-        alert(`Pasto salvato per ${giorno.toUpperCase()} (${tipo})!`);
-    } catch (error) {
-        console.error("Errore durante il salvataggio:", error);
-        alert("Errore nel salvataggio del pasto.");
-    }
-}
-loadTable();
+loadMenu();
