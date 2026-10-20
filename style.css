@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Pasti — style.css
+   Segue DESIGN.md: minimalista, neutro, animazioni brevi su transform/opacity.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Iosevka+Charon:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+/* ---------- Token ---------- */
+:root {
+    color-scheme: light dark;
+
+    --bg: #FAFAFA;
+    --surface: #FFFFFF;
+    --text: #111111;
+    --muted: #737373;
+    --border: #E5E5E5;
+    --hover: #F5F5F5;
+
+    --font: 'Iosevka Charon', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace, sans-serif;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0A0A0A;
+        --surface: #141414;
+        --text: #EDEDED;
+        --muted: #8A8A8A;
+        --border: #222222;
+        --hover: #1A1A1A;
+    }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 64px 24px 96px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+    max-width: 960px;
+    margin: 0 auto 32px;
+    font-size: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+}
+
+/* ---------- Tabella ---------- */
+table {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr {
+    transition: background-color 200ms var(--ease-out);
+}
+
+tbody tr:hover {
+    background: var(--hover);
+}
+
+/* Giorno */
+td:first-child {
+    width: 1%;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    letter-spacing: -0.01em;
+}
+
+td:first-child strong {
+    font-weight: 600;
+}
+
+/* Tipo */
+td:nth-child(2) {
+    width: 1%;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    color: var(--muted);
+}
+
+/* Azione */
+td:last-child {
+    width: 1%;
+    text-align: right;
+}
+
+/* ---------- Input ---------- */
+input[type="text"] {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 0.9375rem;
+    color: var(--text);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 150ms ease-in-out, background-color 150ms ease-in-out;
+}
+
+input[type="text"]::placeholder {
+    color: var(--muted);
+    opacity: 0.7;
+}
+
+input[type="text"]:hover {
+    border-color: var(--border);
+}
+
+input[type="text"]:focus {
+    border-color: var(--muted);
+    background: var(--bg);
+}
+
+/* ---------- Bottone ---------- */
+button {
+    padding: 8px 16px;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--bg);
+    background: var(--text);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 150ms ease-in-out, transform 150ms var(--ease-out);
+}
+
+button:hover {
+    opacity: 0.85;
+}
+
+button:active {
+    transform: scale(0.9);
+}
+
+button:focus-visible,
+input[type="text"]:focus-visible {
+    outline: 2px solid var(--muted);
+    outline-offset: 2px;
+}
+
+/* ---------- Entrata a cascata delle righe (stagger 40ms) ---------- */
+@keyframes row-in {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+tbody tr {
+    animation: row-in 300ms var(--ease-out) both;
+}
+
+tbody tr:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+tbody tr:nth-child(2) {
+    animation-delay: 40ms;
+}
+
+tbody tr:nth-child(3) {
+    animation-delay: 80ms;
+}
+
+tbody tr:nth-child(4) {
+    animation-delay: 120ms;
+}
+
+tbody tr:nth-child(5) {
+    animation-delay: 160ms;
+}
+
+tbody tr:nth-child(6) {
+    animation-delay: 200ms;
+}
+
+tbody tr:nth-child(7) {
+    animation-delay: 240ms;
+}
+
+tbody tr:nth-child(8) {
+    animation-delay: 280ms;
+}
+
+tbody tr:nth-child(9) {
+    animation-delay: 320ms;
+}
+
+tbody tr:nth-child(10) {
+    animation-delay: 360ms;
+}
+
+tbody tr:nth-child(11) {
+    animation-delay: 400ms;
+}
+
+tbody tr:nth-child(12) {
+    animation-delay: 440ms;
+}
+
+tbody tr:nth-child(13) {
+    animation-delay: 480ms;
+}
+
+tbody tr:nth-child(14) {
+    animation-delay: 520ms;
+}
+
+tbody tr:nth-child(n+15) {
+    animation-delay: 560ms;
+}
+
+/* ---------- Mobile: ogni riga diventa un blocco ---------- */
+@media (max-width: 720px) {
+    body {
+        padding: 40px 16px 64px;
+    }
+
+    h1 {
+        font-size: 1.625rem;
+        margin-bottom: 24px;
+    }
+
+    thead {
+        display: none;
+    }
+
+    table,
+    tbody {
+        display: block;
+    }
+
+    tbody tr {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "giorno tipo"
+            "piatto piatto"
+            "note   note"
+            "azione azione";
+        gap: 4px 12px;
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    td,
+    td:first-child,
+    td:nth-child(2),
+    td:last-child {
+        width: auto;
+        padding: 0;
+        border-bottom: none;
+    }
+
+    td:nth-child(1) {
+        grid-area: giorno;
+    }
+
+    td:nth-child(2) {
+        grid-area: tipo;
+        text-align: right;
+    }
+
+    td:nth-child(3) {
+        grid-area: piatto;
+    }
+
+    td:nth-child(4) {
+        grid-area: note;
+    }
+
+    td:nth-child(5) {
+        grid-area: azione;
+        margin-top: 8px;
+    }
+
+    input[type="text"] {
+        padding: 10px;
+        border-color: var(--border);
+    }
+
+    button {
+        width: 100%;
+        padding: 10px 16px;
+    }
+}
+
+/* ---------- Accessibilità: riduci il movimento ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
